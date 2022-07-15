@@ -3,6 +3,7 @@ module gintest
 go 1.18
 
 require (
+	github.com/gin-contrib/multitemplate v0.0.0-20220705015713-e21a0ba39de3
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/gin v1.8.1 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
