@@ -7,6 +7,40 @@
     <title>Document</title>
 </head>
 <body>
-    hello
+    <input type="text" placeholder="账号" maxlength="11" id="username"><br>
+    <input type="text" placeholder="密码" id="password"><br>
+    <button id="login">登录</button>
+    <div class="div1"></div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(function () {
+
+            $('#login').click(function () {
+                // alert('ok');
+                //获取用户名和密码:
+                username = $('#username').val();
+                password = $('#password').val();
+                //rember = $('#rember').val();
+                // alert(rember);
+                $.ajax({
+                    url:"/login_ajax_check",
+                    type:"POST",    //提交方式
+                    data:JSON.stringify({"username":username,"password":password}),
+                    dataType:"json",
+                    
+                }).done(function (data) {
+                    if (data.id==2){
+                        //alert(data)
+                        location.href="/index"
+
+                    }else{
+                        // alert('username');
+                       $('.div1').show().html('用户名或密码输入错误')
+
+                    }
+                })
+            });
+        });
+    </script>
 </body>
 </html>

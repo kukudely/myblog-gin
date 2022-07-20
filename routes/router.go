@@ -1,8 +1,8 @@
 package routes
 
 import (
+	v1 "gintest/api/v1"
 	"gintest/utils"
-	"net/http"
 
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
@@ -23,14 +23,6 @@ func InitRouter() {
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(200, "front", nil)
 	})
-
-	router := r.Group("api/v2")
-	{
-		router.GET("hello", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{
-				"message": "Hello,Gin!",
-			})
-		})
-	}
+	r.POST("/login_ajax_check", v1.LoginFront)
 	r.Run(utils.HttpPort)
 }
