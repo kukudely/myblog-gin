@@ -10,7 +10,7 @@ import (
 
 func createMyRender() multitemplate.Renderer {
 	p := multitemplate.NewRenderer()
-	p.AddFromFiles("front", "web/index.html")
+	p.AddFromFiles("front", "web/front/dist/index.html")
 	return p
 }
 
@@ -18,7 +18,7 @@ func InitRouter() {
 	gin.SetMode(utils.AppMode)
 	r := gin.Default()
 	r.HTMLRender = createMyRender()
-	r.Static("/static", "./web")
+	r.Static("/_assets", "./web/front/dist/_assets")
 
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(200, "front", nil)
