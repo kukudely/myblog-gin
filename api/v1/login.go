@@ -2,8 +2,8 @@ package v1
 
 import (
 	"fmt"
-	"gintest/model"
-	"gintest/utils/errmsg"
+	"myblog-gin/model"
+	"myblog-gin/utils/errmsg"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

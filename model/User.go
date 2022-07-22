@@ -1,7 +1,7 @@
 package model
 
 import (
-	"gintest/utils/errmsg"
+	"myblog-gin/utils/errmsg"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"

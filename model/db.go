@@ -2,7 +2,7 @@ package model
 
 import (
 	"fmt"
-	"gintest/utils"
+	"myblog-gin/utils"
 	"time"
 
 	"gorm.io/driver/mysql"

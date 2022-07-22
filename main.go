@@ -1,8 +1,8 @@
 package main
 
 import (
-	"gintest/model"
-	"gintest/routes"
+	"myblog-gin/model"
+	"myblog-gin/routes"
 )
 
 func main() {

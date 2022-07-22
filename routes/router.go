@@ -1,8 +1,8 @@
 package routes
 
 import (
-	v1 "gintest/api/v1"
-	"gintest/utils"
+	v1 "myblog-gin/api/v1"
+	"myblog-gin/utils"
 
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
@@ -10,7 +10,7 @@ import (
 
 func createMyRender() multitemplate.Renderer {
 	p := multitemplate.NewRenderer()
-	p.AddFromFiles("front", "web/front/dist/index.html")
+	p.AddFromFiles("front", "web/dist/index.html")
 	return p
 }
 
@@ -18,8 +18,7 @@ func InitRouter() {
 	gin.SetMode(utils.AppMode)
 	r := gin.Default()
 	r.HTMLRender = createMyRender()
-	r.Static("/_assets", "./web/front/dist/_assets")
-
+	r.Static("/assets", "./web/dist/assets")
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(200, "front", nil)
 	})
