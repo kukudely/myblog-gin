@@ -14,6 +14,45 @@ type User struct {
 	Role     int    `gorm:"type:int" json:"role"`
 }
 
+func CheckUser(name string) (code int) {
+	var user User
+	db.Select("id").Where("username = ?", name).First(&user)
+	if user.ID > 0 {
+		return errmsg.ERROR_USERNAME_USED //1001
+	}
+	return errmsg.SUCCSE
+}
+func CreateUser(data *User) int {
+	err := db.Create(&data).Error
+	if err != nil {
+		return errmsg.ERROR // 500
+	}
+	return errmsg.SUCCSE
+}
+
+// GetUsers 查询用户列表
+func GetUsers(username string, pageSize int, pageNum int) ([]User, int64) {
+	var users []User
+	var total int64
+
+	if username != "" {
+		db.Select("id,username,role,created_at").Where(
+			"username LIKE ?", username+"%",
+		).Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users)
+		db.Model(&users).Where(
+			"username LIKE ?", username+"%",
+		).Count(&total)
+		return users, total
+	}
+	db.Select("id,username,role,created_at").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users)
+	db.Model(&users).Count(&total)
+
+	if err != nil {
+		return users, 0
+	}
+	return users, total
+}
+
 func CheckLoginFront(username string, password string) (User, int) {
 	var user User
 	var PasswordErr error

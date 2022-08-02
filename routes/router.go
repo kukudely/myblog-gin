@@ -30,9 +30,9 @@ func InitRouter() {
 	router := r.Group("api/v1")
 	{
 		// 用户信息模块
-		// router.POST("user/add", v1.AddUser)
+		router.POST("user/add", v1.AddUser)
 		// router.GET("user/:id", v1.GetUserInfo)
-		// router.GET("users", v1.GetUsers)
+		router.GET("users", v1.GetUsers)
 
 		// 文章分类信息模块
 		// router.GET("category", v1.GetCate)
@@ -49,6 +49,9 @@ func InitRouter() {
 
 		// 获取个人设置信息
 		router.GET("profile/:id", v1.GetProfile)
+
+		// 更新个人信息
+		router.PUT("profile/:id", v1.UpdateProfile)
 
 		// 评论模块
 		// router.POST("addcomment", v1.AddComment)

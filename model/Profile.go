@@ -29,7 +29,7 @@ func GetProfile(id int) (Profile, int) {
 // UpdateProfile 更新个人信息设置
 func UpdateProfile(id int, data *Profile) int {
 	var profile Profile
-	err = db.Model(&profile).Where("ID = ?", id).Updates(&data).Error
+	err = db.Model(&profile).Where("ID = ?", id).Updates(data).Error
 	if err != nil {
 		return errmsg.ERROR
 	}
