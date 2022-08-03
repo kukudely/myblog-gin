@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"myblog-gin/model"
 	"myblog-gin/utils/errmsg"
+	"myblog-gin/utils/validator"
 	"strconv"
 
 	"net/http"
@@ -13,21 +14,21 @@ import (
 
 func AddUser(c *gin.Context) {
 	var data model.User
-	// var msg string
-	// var validCode int
+	var msg string
+	var validCode int
 	_ = c.ShouldBindJSON(&data)
 
-	// msg, validCode = validator.Validate(&data)
-	// if validCode != errmsg.SUCCSE {
-	// 	c.JSON(
-	// 		http.StatusOK, gin.H{
-	// 			"status":  validCode,
-	// 			"message": msg,
-	// 		},
-	// 	)
-	// 	c.Abort()
-	// 	return
-	// }
+	msg, validCode = validator.Validate(&data)
+	if validCode != errmsg.SUCCSE {
+		c.JSON(
+			http.StatusOK, gin.H{
+				"status":  validCode,
+				"message": msg,
+			},
+		)
+		c.Abort()
+		return
+	}
 	fmt.Println(data.Username)
 	code := model.CheckUser(data.Username)
 	if code == errmsg.SUCCSE {
@@ -48,6 +49,7 @@ func GetUsers(c *gin.Context) {
 	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
 	username := c.Query("username")
 
+	fmt.Println()
 	switch {
 	case pageSize >= 100:
 		pageSize = 100
