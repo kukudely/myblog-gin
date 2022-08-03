@@ -23,6 +23,7 @@ func CheckUser(name string) (code int) {
 	return errmsg.SUCCSE
 }
 func CreateUser(data *User) int {
+	//data.Password = ScryptPw(data.Password)
 	err := db.Create(&data).Error
 	if err != nil {
 		return errmsg.ERROR // 500
@@ -65,6 +66,27 @@ func CheckLoginFront(username string, password string) (User, int) {
 	}
 	if PasswordErr != nil {
 		return user, errmsg.ERROR_PASSWORD_WRONG
+	}
+	return user, errmsg.SUCCSE
+}
+
+// CheckLogin 后台登录验证
+func CheckLogin(username string, password string) (User, int) {
+	var user User
+	var PasswordErr error
+
+	db.Where("username = ?", username).First(&user)
+
+	PasswordErr = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+
+	if user.ID == 0 {
+		return user, errmsg.ERROR_USER_NOT_EXIST
+	}
+	if PasswordErr != nil {
+		return user, errmsg.ERROR_PASSWORD_WRONG
+	}
+	if user.Role != 1 {
+		return user, errmsg.ERROR_USER_NO_RIGHT
 	}
 	return user, errmsg.SUCCSE
 }
