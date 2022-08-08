@@ -1,6 +1,8 @@
 package model
 
 import (
+	"fmt"
+	"log"
 	"myblog-gin/utils/errmsg"
 
 	"golang.org/x/crypto/bcrypt"
@@ -10,7 +12,7 @@ import (
 type User struct {
 	gorm.Model
 	Username string `gorm:"type:varchar(20);not null" json:"username" validate:"required,min=4,max=12" label:"用户名"`
-	Password string `gorm:"type:varchar(20);not null" json:"password" validate:"required,min=6,max=120" label:"密码"`
+	Password string `gorm:"type:varchar(500);not null" json:"password" validate:"required,min=6,max=120" label:"密码"`
 	Role     int    `gorm:"type:int" json:"role" validate:"required,gte=2" label:"角色码"`
 }
 
@@ -22,16 +24,39 @@ func CheckUser(name string) (code int) {
 	}
 	return errmsg.SUCCSE
 }
+
+func CheckUpUser(id int, name string) (code int) {
+	var user User
+	db.Select("id, username").Where("username = ?", name).First(&user)
+	if user.ID == uint(id) {
+		return errmsg.SUCCSE
+	}
+	if user.ID > 0 {
+		return errmsg.ERROR_USERNAME_USED //1001
+	}
+	return errmsg.SUCCSE
+}
+
 func CreateUser(data *User) int {
-	//data.Password = ScryptPw(data.Password)
+	// data.Password = ScryptPw(data.Password)
+	fmt.Println(data)
 	err := db.Create(&data).Error
+	fmt.Println(err)
 	if err != nil {
 		return errmsg.ERROR // 500
 	}
 	return errmsg.SUCCSE
 }
 
-// GetUsers 查询用户列表
+func GetUser(id int) (User, int) {
+	var user User
+	err := db.Limit(1).Where("ID = ?", id).Find(&user).Error
+	if err != nil {
+		return user, errmsg.ERROR
+	}
+	return user, errmsg.SUCCSE
+}
+
 func GetUsers(username string, pageSize int, pageNum int) ([]User, int64) {
 	var users []User
 	var total int64
@@ -52,6 +77,35 @@ func GetUsers(username string, pageSize int, pageNum int) ([]User, int64) {
 		return users, 0
 	}
 	return users, total
+}
+
+func EditUser(id int, data *User) int {
+	var user User
+	var maps = make(map[string]interface{})
+	maps["username"] = data.Username
+	maps["role"] = data.Role
+	err = db.Model(&user).Where("id = ? ", id).Updates(maps).Error
+	if err != nil {
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCSE
+}
+func ChangePassword(id int, data *User) int {
+
+	err = db.Select("password").Where("id = ?", id).Updates(&data).Error
+	if err != nil {
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCSE
+}
+
+func DeleteUser(id int) int {
+	var user User
+	err = db.Where("id = ? ", id).Delete(&user).Error
+	if err != nil {
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCSE
 }
 
 func CheckLoginFront(username string, password string) (User, int) {
@@ -89,4 +143,28 @@ func CheckLogin(username string, password string) (User, int) {
 		return user, errmsg.ERROR_USER_NO_RIGHT
 	}
 	return user, errmsg.SUCCSE
+}
+
+// BeforeCreate 密码加密&权限控制
+func (u *User) BeforeCreate(_ *gorm.DB) (err error) {
+	u.Password = ScryptPw(u.Password)
+	u.Role = 2
+	return nil
+}
+
+func (u *User) BeforeUpdate(_ *gorm.DB) (err error) {
+	u.Password = ScryptPw(u.Password)
+	return nil
+}
+
+// ScryptPw 生成密码
+func ScryptPw(password string) string {
+	const cost = 10
+
+	HashPw, err := bcrypt.GenerateFromPassword([]byte(password), cost)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return string(HashPw)
 }

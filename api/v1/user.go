@@ -29,7 +29,7 @@ func AddUser(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	fmt.Println(data.Username)
+	//fmt.Println(data.Username)
 	code := model.CheckUser(data.Username)
 	if code == errmsg.SUCCSE {
 		model.CreateUser(&data)
