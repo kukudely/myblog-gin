@@ -139,9 +139,9 @@ func CheckLogin(username string, password string) (User, int) {
 	if PasswordErr != nil {
 		return user, errmsg.ERROR_PASSWORD_WRONG
 	}
-	if user.Role != 1 {
-		return user, errmsg.ERROR_USER_NO_RIGHT
-	}
+	// if user.Role != 1 {
+	// 	return user, errmsg.ERROR_USER_NO_RIGHT
+	// }
 	return user, errmsg.SUCCSE
 }
 

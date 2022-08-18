@@ -18,13 +18,13 @@ func createMyRender() multitemplate.Renderer {
 func InitRouter() {
 	gin.SetMode(utils.AppMode)
 	r := gin.Default()
+	r.Use(middleware.Cors())
 	r.HTMLRender = createMyRender()
 	r.Static("/assets", "./web/dist/assets")
 
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(200, "front", nil)
 	})
-
 	auth := r.Group("api/v1")
 	auth.Use(middleware.JwtToken())
 	{
@@ -36,13 +36,13 @@ func InitRouter() {
 		// auth.PUT("admin/changepw/:id", v1.ChangeUserPassword)
 		// 分类模块的路由接口
 		// auth.GET("admin/category", v1.GetCate)
-		// auth.POST("category/add", v1.AddCategory)
+		auth.POST("category/add", v1.AddCategory)
 		// auth.PUT("category/:id", v1.EditCate)
 		// auth.DELETE("category/:id", v1.DeleteCate)
 		// 文章模块的路由接口
 		// auth.GET("admin/article/info/:id", v1.GetArtInfo)
 		// auth.GET("admin/article", v1.GetArt)
-		// auth.POST("article/add", v1.AddArticle)
+		auth.POST("article/add", v1.AddArticle)
 		// auth.PUT("article/:id", v1.EditArt)
 		// auth.DELETE("article/:id", v1.DeleteArt)
 		// 上传文件
@@ -72,7 +72,7 @@ func InitRouter() {
 		// router.GET("category/:id", v1.GetCateInfo)
 
 		// 文章模块
-		// router.GET("article", v1.GetArt)
+		router.GET("article", v1.GetArt)
 		// router.GET("article/list/:id", v1.GetCateArt)
 		// router.GET("article/info/:id", v1.GetArtInfo)
 

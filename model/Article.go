@@ -56,7 +56,8 @@ func GetArt(pageSize int, pageNum int) ([]Article, int, int64) {
 	var err error
 	var total int64
 
-	err = db.Select("article.id, title, img, created_at, updated_at, `desc`, comment_count, read_count, category.name").Limit(pageSize).Offset((pageNum - 1) * pageSize).Order("Created_At DESC").Joins("Category").Find(&articleList).Error
+	// err = db.Select("article.id, title, img, created_at, updated_at, `desc`, comment_count, read_count, category.name").Limit(pageSize).Offset((pageNum - 1) * pageSize).Order("Created_At DESC").Joins("Category").Find(&articleList).Error
+	err = db.Select("title, img, `desc`, created_at").Limit(pageSize).Offset((pageNum - 1) * pageSize).Order("Created_At DESC").Joins("Category").Find(&articleList).Error
 	// 单独计数
 	db.Model(&articleList).Count(&total)
 	if err != nil {

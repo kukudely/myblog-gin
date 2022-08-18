@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"myblog-gin/model"
 	"myblog-gin/utils/errmsg"
 	"net/http"
@@ -14,6 +15,7 @@ func AddArticle(c *gin.Context) {
 	var data model.Article
 	_ = c.ShouldBindJSON(&data)
 
+	fmt.Println(data)
 	code := model.CreateArt(&data)
 
 	c.JSON(http.StatusOK, gin.H{
