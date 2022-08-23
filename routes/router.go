@@ -74,7 +74,7 @@ func InitRouter() {
 		// 文章模块
 		router.GET("article", v1.GetArt)
 		// router.GET("article/list/:id", v1.GetCateArt)
-		// router.GET("article/info/:id", v1.GetArtInfo)
+		router.GET("article/info/:id", v1.GetArtInfo)
 
 		// 登录控制模块
 		router.POST("login", v1.Login)
@@ -84,9 +84,9 @@ func InitRouter() {
 		router.GET("profile/:id", v1.GetProfile)
 
 		// 评论模块
-		// router.POST("addcomment", v1.AddComment)
+		router.POST("addcomment", v1.AddComment)
 		// router.GET("comment/info/:id", v1.GetComment)
-		// router.GET("commentfront/:id", v1.GetCommentListFront)
+		router.GET("commentfront/:id", v1.GetCommentListFront)
 		// router.GET("commentcount/:id", v1.GetCommentCount)
 	}
 
