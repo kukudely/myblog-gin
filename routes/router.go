@@ -17,8 +17,9 @@ func createMyRender() multitemplate.Renderer {
 
 func InitRouter() {
 	gin.SetMode(utils.AppMode)
-	r := gin.Default()
+	r := gin.New()
 	r.Use(middleware.Cors())
+	r.Use(middleware.Log())
 	r.HTMLRender = createMyRender()
 	r.Static("/assets", "./web/dist/assets")
 
@@ -68,12 +69,12 @@ func InitRouter() {
 		router.GET("users", v1.GetUsers)
 
 		// 文章分类信息模块
-		// router.GET("category", v1.GetCate)
+		router.GET("category", v1.GetCate)
 		// router.GET("category/:id", v1.GetCateInfo)
 
 		// 文章模块
 		router.GET("article", v1.GetArt)
-		// router.GET("article/list/:id", v1.GetCateArt)
+		router.GET("article/list/:id", v1.GetCateArt)
 		router.GET("article/info/:id", v1.GetArtInfo)
 
 		// 登录控制模块
