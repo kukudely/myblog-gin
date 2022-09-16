@@ -17,6 +17,11 @@ var (
 	DbUser     string
 	DbPassWord string
 	DbName     string
+
+	ReAddr     string
+	RePort     string
+	RePassWord string
+	ReDb       int
 )
 
 func init() {
@@ -26,7 +31,9 @@ func init() {
 	}
 	LoadServer(file)
 	LoadData(file)
+	LoadRedis(file)
 }
+
 func LoadServer(file *ini.File) {
 	AppMode = file.Section("server").Key("AppMode").MustString("debug")
 	HttpPort = file.Section("server").Key("HttpPort").MustString(":3000")
@@ -39,4 +46,11 @@ func LoadData(file *ini.File) {
 	DbUser = file.Section("database").Key("DbUser").MustString("root")
 	DbPassWord = file.Section("database").Key("DbPassWord").MustString("147258369")
 	DbName = file.Section("database").Key("DbName").MustString("ginblog")
+}
+func LoadRedis(file *ini.File) {
+	ReAddr = file.Section("redis").Key("ReAddr").MustString("180.76.187.248")
+	RePort = file.Section("redis").Key("RePort").MustString("6379")
+	RePassWord = file.Section("redis").Key("RePassWord").MustString("")
+	ReDb = file.Section("redis").Key("ReDb").MustInt(0)
+
 }

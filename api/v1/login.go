@@ -19,6 +19,7 @@ func Login(c *gin.Context) {
 	var token string
 	var code int
 
+	fmt.Println(formData)
 	formData, code = model.CheckLogin(formData.Username, formData.Password)
 
 	if code == errmsg.SUCCSE {

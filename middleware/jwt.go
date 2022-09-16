@@ -76,7 +76,6 @@ func JwtToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var code int
 		tokenHeader := c.Request.Header.Get("Authorization")
-		//fmt.Println(tokenHeader)
 		if tokenHeader == "" {
 			code = errmsg.ERROR_TOKEN_EXIST
 			c.JSON(http.StatusOK, gin.H{

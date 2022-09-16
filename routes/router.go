@@ -12,14 +12,15 @@ import (
 func createMyRender() multitemplate.Renderer {
 	p := multitemplate.NewRenderer()
 	p.AddFromFiles("front", "web/dist/index.html")
+	// p.AddFromFiles("login", "web/login.html")
 	return p
 }
 
 func InitRouter() {
 	gin.SetMode(utils.AppMode)
-	r := gin.New()
+	r := gin.Default()
 	r.Use(middleware.Cors())
-	r.Use(middleware.Log())
+	// r.Use(middleware.Log())
 	r.HTMLRender = createMyRender()
 	r.Static("/assets", "./web/dist/assets")
 
@@ -30,11 +31,11 @@ func InitRouter() {
 	auth.Use(middleware.JwtToken())
 	{
 		// 用户模块的路由接口
-		// auth.GET("admin/users", v1.GetUsers)
+		auth.GET("admin/users", v1.GetUsers)
 		// auth.PUT("user/:id", v1.EditUser)
 		// auth.DELETE("user/:id", v1.DeleteUser)
 		//修改密码
-		// auth.PUT("admin/changepw/:id", v1.ChangeUserPassword)
+		auth.PUT("admin/changepw/:id", v1.ChangeUserPassword)
 		// 分类模块的路由接口
 		// auth.GET("admin/category", v1.GetCate)
 		auth.POST("category/add", v1.AddCategory)
@@ -66,7 +67,7 @@ func InitRouter() {
 		// 用户信息模块
 		router.POST("user/add", v1.AddUser)
 		// router.GET("user/:id", v1.GetUserInfo)
-		router.GET("users", v1.GetUsers)
+		// router.GET("users", v1.GetUsers)
 
 		// 文章分类信息模块
 		router.GET("category", v1.GetCate)
