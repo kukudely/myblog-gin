@@ -2,12 +2,14 @@ package v1
 
 import (
 	"fmt"
+	"myblog-gin/cache"
 	"myblog-gin/model"
 	"myblog-gin/utils/errmsg"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis"
 )
 
 // AddArticle 添加文章
@@ -61,6 +63,48 @@ func GetArtInfo(c *gin.Context) {
 		"data":    data,
 		"message": errmsg.GetErrMsg(code),
 	})
+}
+func GetOneArtInfo(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	uintId := uint64(id)
+	article, errRe := cache.GetOneArticleCache(uintId)
+	fmt.Println("从缓存中查询")
+	if errRe == redis.Nil || errRe != nil {
+		//get from mysql
+		// err = db.Where("id = ?", id).Preload("Category").First(&art).Error
+		data, code := model.GetArtInfo(id)
+		fmt.Println("从数据库中查询")
+		c.JSON(http.StatusOK, gin.H{
+			"status":  code,
+			"data":    data,
+			"message": errmsg.GetErrMsg(code),
+		})
+		//set cache
+		errSel := cache.SetOneArticleCache(uintId, data)
+		if errSel != nil {
+			fmt.Println(errSel)
+			// c.JSON(http.StatusOK, gin.H{
+			// 	"status":  code,
+			// 	"data":    data,
+			// 	"message": "缓存写入失败",
+			// })
+		}
+		// else {
+		// 	c.JSON(http.StatusOK, gin.H{
+		// 		"status":  code,
+		// 		"data":    data,
+		// 		"message": errmsg.GetErrMsg(code),
+		// 	})
+		// }
+
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  200,
+			"data":    article,
+			"message": errmsg.GetErrMsg(200),
+		})
+	}
+
 }
 
 // GetArt 查询文章列表

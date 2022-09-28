@@ -1,0 +1,1 @@
+import{_ as x,c as o,o as e}from"./index.4d1f48b7.js";const t={},c={style:{width:"100%","background-color":"aqua",position:"absolute"}};function s(n,a){return e(),o("div",c," sxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx ")}const _=x(t,[["render",s]]);export{_ as default};
