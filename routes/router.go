@@ -13,6 +13,7 @@ func createMyRender() multitemplate.Renderer {
 	p := multitemplate.NewRenderer()
 	p.AddFromFiles("front", "web/dist/index.html")
 	p.AddFromFiles("admin", "web/admin/index.html")
+	p.AddFromFiles("searchjson", "Search.json")
 	return p
 }
 
@@ -28,6 +29,7 @@ func InitRouter() {
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(200, "front", nil)
 	})
+
 	r.GET("/admin", func(c *gin.Context) {
 		c.HTML(200, "admin", nil)
 	})
@@ -68,6 +70,10 @@ func InitRouter() {
 	*/
 	router := r.Group("api/v1")
 	{
+		router.GET("/search.json", func(c *gin.Context) {
+			c.HTML(200, "searchjson", nil)
+
+		})
 		// 用户信息模块
 		router.POST("user/add", v1.AddUser)
 		// router.GET("user/:id", v1.GetUserInfo)
@@ -81,6 +87,7 @@ func InitRouter() {
 		router.GET("article", v1.GetArt)
 		router.GET("article/list/:id", v1.GetCateArt)
 		router.GET("article/info/:id", v1.GetOneArtInfo)
+		router.GET("recentart", v1.GetRecArt)
 
 		// 登录控制模块
 		router.POST("login", v1.Login)

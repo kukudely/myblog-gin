@@ -21,6 +21,7 @@ type Article struct {
 	Img          string `gorm:"type:varchar(100)" json:"img"`
 	CommentCount int    `gorm:"type:int;not null;default:0" json:"comment_count"`
 	ReadCount    int    `gorm:"type:int;not null;default:0" json:"read_count"`
+	Url          int    `gorm:"type:varchar(100)" json:"url;"`
 }
 
 // CreateArt 新增文章
@@ -29,6 +30,15 @@ func CreateArt(data *Article) int {
 	if err != nil {
 		return errmsg.ERROR // 500
 	}
+	return errmsg.SUCCSE
+}
+func GetAllArt(articleList *[]Article) int {
+
+	err = db.Select("articles.id, title, content, url").Find(&articleList).Error
+	if err != nil {
+		return errmsg.ERROR
+	}
+	// fmt.Println(articleList)
 	return errmsg.SUCCSE
 }
 
@@ -44,6 +54,16 @@ func GetCateArt(id int, pageSize int, pageNum int) ([]Article, int, int64) {
 		return nil, errmsg.ERROR_CATE_NOT_EXIST, 0
 	}
 	return cateArtList, errmsg.SUCCSE, total
+}
+
+func GetRecArt(artnums int) ([]Article, int) {
+	var articleList []Article
+	err = db.Select("articles.id, title, created_at").Limit(artnums).Order("Created_At DESC").Find(&articleList).Error
+	if err != nil {
+		return nil, errmsg.ERROR
+	}
+	// fmt.Println(articleList)
+	return articleList, errmsg.SUCCSE
 }
 
 // GetArtInfo 查询单个文章

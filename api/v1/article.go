@@ -26,6 +26,11 @@ func AddArticle(c *gin.Context) {
 		"message": errmsg.GetErrMsg(code),
 	})
 }
+func GetAllArt(articleList *[]model.Article) {
+
+	code := model.GetAllArt(articleList)
+	fmt.Println(code)
+}
 
 // GetCateArt 查询分类下的所有文章
 func GetCateArt(c *gin.Context) {
@@ -53,6 +58,15 @@ func GetCateArt(c *gin.Context) {
 		"message": errmsg.GetErrMsg(code),
 	})
 }
+func GetRecArt(c *gin.Context) {
+	artnums, _ := strconv.Atoi(c.Query("artnums"))
+	data, code := model.GetRecArt(artnums)
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"data":    data,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
 
 // GetArtInfo 查询单个文章信息
 func GetArtInfo(c *gin.Context) {
@@ -68,12 +82,12 @@ func GetOneArtInfo(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	uintId := uint64(id)
 	article, errRe := cache.GetOneArticleCache(uintId)
-	fmt.Println("从缓存中查询")
+	// fmt.Println("从缓存中查询")
 	if errRe == redis.Nil || errRe != nil {
 		//get from mysql
 		// err = db.Where("id = ?", id).Preload("Category").First(&art).Error
 		data, code := model.GetArtInfo(id)
-		fmt.Println("从数据库中查询")
+		// fmt.Println("从数据库中查询")
 		c.JSON(http.StatusOK, gin.H{
 			"status":  code,
 			"data":    data,
@@ -167,4 +181,7 @@ func DeleteArt(c *gin.Context) {
 		"status":  code,
 		"message": errmsg.GetErrMsg(code),
 	})
+}
+func SearchArticleTitle(c *gin.Context) {
+
 }
